@@ -16,4 +16,4 @@ cp "$root"/print/*.typ .
 timeout 3m node exporter/oi-wiki-export-typst/index.js source
 mkdir -p "$root/dist"
 typst compile oi-wiki-export.typ "$tmp/result.pdf"
-mv result.pdf "$root/dist/wiki-template.pdf"
+mv result.pdf "$root/dist/xcpc.pdf"

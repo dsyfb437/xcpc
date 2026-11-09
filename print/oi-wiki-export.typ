@@ -1,4 +1,4 @@
-/* Wiki Template print layout, based on oi-wiki-export-typst. */
+/* xcpc print layout, based on oi-wiki-export-typst. */
 
 /* BEGIN imports */
 #import "constants.typ": *
@@ -13,7 +13,7 @@
 
 /* BEGIN meta */
 #set document(
-  title: "Wiki Template",
+  title: "xcpc",
   author: "dsyfb437",
 )
 
@@ -41,7 +41,7 @@
     25pt,
     font: serif-font,
     weight: 700,
-  )[Wiki Template]
+  )[xcpc]
   #v(4cm)
   #text(
     18pt,
@@ -220,6 +220,6 @@
 
 #align(
   center + horizon,
-  text(17pt)[https://azusaaa.com/wiki-template/],
+  text(17pt)[https://azusaaa.com/xcpc/],
 )
 /* END back cover */

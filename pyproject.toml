@@ -1,6 +1,6 @@
 [project]
-name = "wiki-template"
-version = "0.1.0"
+name = "xcpc"
+version = "0.2.0"
 description = "A Markdown template for web and print output."
 requires-python = ">=3.10"
 dependencies = [

@@ -1,3 +1,14 @@
 /.venv/
 /site/
 /dist/
+node_modules/
+__pycache__/
+*.py[cod]
+.cache/
+.toolchain/
+*.o
+*.out
+*.exe
+*.log
+.DS_Store
+Thumbs.db

@@ -1,7 +1,7 @@
-site_name: Wiki Template
+site_name: xcpc
 site_description: 一个可同时生成网页和 A4 文档的 Markdown 模板
 site_author: dsyfb437
-site_url: https://azusaaa.com/wiki-template/
+site_url: https://azusaaa.com/xcpc/
 copyright: Copyright &copy; 2026 dsyfb437
 
 theme:
@@ -38,17 +38,18 @@ theme:
     - content.tabs.link
 
 nav:
-  - 模板概览: index.md
-  - 使用说明: intro.md
-  - 二分查找: basic/binary-search.md
-  - 线段树: ds/segment-tree.md
-  - 数论基础: math/number-theory.md
+  - 首页: index.md
+  - 基础算法: basics.md
+  - 树上算法: trees.md
+  - 图论: graphs.md
 
 plugins:
   - search:
       lang: zh
 
 markdown_extensions:
+  - pymdownx.snippets:
+      check_paths: true
   - admonition
   - attr_list
   - def_list
