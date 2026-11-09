@@ -1,0 +1,41 @@
+:root {
+  --md-primary-fg-color: #ffffff;
+  --md-primary-bg-color: #1f2328;
+  --md-accent-fg-color: #d8463a;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #202938;
+  --md-primary-bg-color: #e8edf5;
+  --md-accent-fg-color: #7aa2f7;
+}
+
+.md-header {
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.1);
+}
+
+.md-tabs {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.md-typeset h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h2 {
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  padding-bottom: 0.35rem;
+}
+
+.md-typeset .grid.cards > ul > li {
+  border-radius: 0.45rem;
+}
+
+.md-typeset table:not([class]) {
+  border-radius: 0.35rem;
+}
+
+.md-typeset code {
+  border-radius: 0.25rem;
+}
