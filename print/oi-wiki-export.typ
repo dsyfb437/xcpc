@@ -220,6 +220,6 @@
 
 #align(
   center + horizon,
-  text(17pt)[https://dsyfb437.github.io/wiki-template/],
+  text(17pt)[https://azusaaa.com/wiki-template/],
 )
 /* END back cover */

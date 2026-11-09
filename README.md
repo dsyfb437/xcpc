@@ -1,6 +1,6 @@
 # Wiki Template
 
-[在线阅读](https://dsyfb437.github.io/wiki-template/) · [打印版 PDF](https://github.com/dsyfb437/wiki-template/releases/latest/download/wiki-template.pdf)
+[在线阅读](https://azusaaa.com/wiki-template/) · [打印版 PDF](https://github.com/dsyfb437/wiki-template/releases/latest/download/wiki-template.pdf)
 
 在 `docs/` 写 Markdown，在 `mkdocs.yml` 登记文章顺序。网站和书共用这份目录。示例使用平铺导航；上游转换器对部分嵌套导航会卡住。
 
