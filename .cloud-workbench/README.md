@@ -72,3 +72,13 @@ sudo systemctl set-property "user-$(id -u clouddev).slice" \
 
 两端都可通过 `ssh -t cloud-workbench ~/bin/ai-session` 进入命名为 cloud-ai 的同一个 tmux 会话。手机 Termux 配置完成后，只需输入 `ai`。
 断开 SSH 不会终止该会话；退出 Codex 或服务器重启后，可运行 `~/bin/ai resume --last` 恢复历史，已经运行的普通进程不会跨服务器重启继续执行。
+
+## 实机验收（2026-11-17）
+
+Android 15 手机已安装 Termux 官方 GitHub v0.118.3 arm64 包，校验值与官方 sha256sums 一致。手机独立生成 SSH 密钥，以 `restrict,pty` 公钥条目授权；私钥仅在手机应用内部。手机 `~/bin/ai` 接入 cloud-ai 持久会话，`~/bin/cloud` 接入项目终端。手机已实际进入 Codex。
+从手机发出只读取 Git 的 AI 任务后关闭发送连接，等待后通过手机新连接读取成功结果：分支 cloud-workbench/setup-20261117、24 个未提交文件。没有提交或修改这些算法文件。
+电脑 VS Code Remote SSH 0.128.0 也已实际连接同一项目，VS Code Server 仅监听服务器回环地址。
+
+Ubuntu 24.04 上已安装系统 bubblewrap，并按[官方沙箱文档](https://learn.chatgpt.com/docs/sandboxing#prerequisites)安装、加载 bwrap-userns-restrict AppArmor profile。没有关闭全局 user namespace 限制。直接 sandbox 内执行 git 和真实 AI 工具调用均已验证。
+
+更换手机可参考 termux-setup.sh，脚本仅生成本机密钥和命令；公钥授权与主机公钥固定仍需分别完成。不要复制旧手机私钥或旧电脑私钥。
