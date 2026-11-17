@@ -2,7 +2,7 @@
 set -euo pipefail
 # Run as a sudo-capable operator on Ubuntu 24.04 before restoring source.
 sudo apt-get update -qq
-sudo apt-get install -y git python3 g++ tmux fonts-noto-cjk fonts-noto-mono zstd
+sudo apt-get install -y git python3 g++ tmux fonts-noto-cjk fonts-noto-core fonts-noto-mono zstd
 stage=$(mktemp -d)
 trap 'rm -rf "$stage"' EXIT
 cd "$stage"

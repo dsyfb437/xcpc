@@ -1,0 +1,15 @@
+[Unit]
+Description=Codex cloud workbench remote control
+Wants=network-online.target
+After=network-online.target
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/clouddev/workspace/xcpc-template
+ExecStart=/usr/local/bin/codex remote-control start --json
+ExecStop=/usr/local/bin/codex remote-control stop --json
+TimeoutStartSec=90
+Restart=on-failure
+RestartSec=15
+[Install]
+WantedBy=default.target

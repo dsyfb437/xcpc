@@ -1,0 +1,6 @@
+[Unit]
+Description=Backup cloud development workspace
+[Service]
+Type=oneshot
+ExecStart=/home/clouddev/bin/workbench-backup
+Nice=10

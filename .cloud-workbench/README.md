@@ -42,3 +42,12 @@ Typst 使用 codly 1.3.0 包；首次构建需要联网下载包。
 ## 当前下一步
 
 验证安卓手机接入、下达真实 AI 任务并断开重连；再决定是否增加网页版编辑器和私人网络。
+
+## 本次部署的持久化配置
+
+`systemd/` 内为 clouddev 用户服务模板，复制到 `~/.config/systemd/user/`，执行 `systemctl --user daemon-reload`，再 enable --now 两个 service/timer。管理员须先执行 `loginctl enable-linger clouddev`。
+云端每日 03:30 UTC（北京时间 11:30）备份。第二台服务器使用 cloudbackup 账户每日 04:15 UTC（北京时间 12:15）拉取备份，目标 `/home/cloudbackup/backups`，服务 `cloud-workbench-offsite.service/timer`。
+第二台持有独立 SSH 密钥，在开发服务器仅获准执行固定备份导出命令；不能借该密钥打开终端。恢复时复制 tar.gz 与同名 .sha256，校验后执行 restore.sh。
+GitHub 使用仅本仓库可写的 deploy key，保存在 clouddev 的 .ssh 下；不写入项目备份。重建服务器后须重新生成、登记 key，或通过 GitHub 设备登录；不要依赖旧电脑的凭证。
+
+本轮只提交 `.cloud-workbench` 中的运维配置；原有 24 个算法源码修改保留为未提交状态，完整副本进入项目备份。
