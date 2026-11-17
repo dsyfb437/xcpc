@@ -5,6 +5,7 @@
  * @idea 动态开点记录各值出现次数。合并递归拼接对应节点，分裂只拆开区间边界。
  * @usage SplitMergeTree t(n); t.add(root,x,d); int other=t.split(root,l,r); t.merge(root,other)。
  * @pitfall 根变量初值为 0，各棵树不共享节点。merge 会清空第二个根，split 从原树移走 [l,r)。
+ *          值域大小 n>0，节点和须放进 long long。节点不回收，空间随累计操作增长。
  */
 #pragma once
 #include <bits/stdc++.h>

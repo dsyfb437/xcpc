@@ -4,7 +4,7 @@
  * @index 数组 0-based，区间 [l,r)
  * @idea 整块更新只动懒标记和块和，边角逐项改。查整块时直接取块和。
  * @usage RangeAddBlocks blocks(a); blocks.add(l,r,delta); blocks.sum(l,r)。
- * @pitfall 区间端点合法，允许空区间。元素和加法标记放进 long long，区间和用 __int128。
+ * @pitfall 区间端点合法，允许空区间。块内保存的 a[i] 和 lazy 标记须放进 long long，区间和用 __int128。
  */
 #pragma once
 #include <bits/stdc++.h>

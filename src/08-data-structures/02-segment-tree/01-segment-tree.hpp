@@ -1,10 +1,12 @@
 /**
  * @brief 线段树（区间加、区间和）
  * @complexity build O(n)，单次 O(log n)
- * @index 下标 1-based
- *
- * 下标从 1 开始。n 是区间右端点，建树时传 a[1..n]。
- * 需要区间乘再加、区间最值的时候照这个结构改 apply 和 push 即可。
+ * @index 下标 1-based，闭区间 [l,r]
+ * @idea 节点存区间和与加法标记，访问子区间时再下传标记。
+ * @usage SegTree seg(n); seg.build(a); 建树用 a[1..n]。
+ *        seg.add_range(l,r,v) 区间加，seg.query(l,r) 查区间和。
+ * @pitfall 支持 n=0；l>r 时修改无效、查询返回 0。
+ *          节点和、加法标记及查询中间和须放进 long long。
  *
  * 例：
  *   SegTree seg(n);
@@ -34,10 +36,13 @@ struct SegTree {
         sum[p] = sum[p * 2] + sum[p * 2 + 1];
     }
 
-    void build(const vector<ll> &a) { build(1, 1, n, a); }
+    void build(const vector<ll> &a) {
+        if (n)
+            build(1, 1, n, a);
+    }
 
     void apply(int p, int l, int r, ll v) {
-        sum[p] += v * (r - l + 1);
+        sum[p] = (__int128)sum[p] + (__int128)v * (r - l + 1);
         add[p] += v;
     }
 

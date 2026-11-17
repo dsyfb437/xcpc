@@ -5,6 +5,7 @@
  * @idea 点修改只复制根到叶的一条路径。两版本计数相减后，按左子树的计数找第 k 小。
  * @usage PersistentSegTree t(n); int r=t.add(old,pos,delta); t.sum(r,l,rgt); t.kth(newer,older,k)。
  * @pitfall n 为正，sum 的区间半开。kth 要求逐点版本差非负，k 从 1 起且不超过差分总数。
+ *          每个版本的节点和、sum 查询的中间和须放进 long long。
  */
 #pragma once
 #include <bits/stdc++.h>
@@ -53,11 +54,11 @@ struct PersistentSegTree {
     }
 
     int kth(int newer, int older, ll k) const {
-        assert(k > 0 && k <= nodes[newer].sum - nodes[older].sum);
+        assert(k > 0 && k <= (__int128)nodes[newer].sum - nodes[older].sum);
         int l = 0, r = n;
         while (r - l > 1) {
             int a = nodes[newer].left, b = nodes[older].left;
-            ll count = nodes[a].sum - nodes[b].sum;
+            __int128 count = (__int128)nodes[a].sum - nodes[b].sum;
             int mid = (l + r) / 2;
             if (k <= count) {
                 newer = a;

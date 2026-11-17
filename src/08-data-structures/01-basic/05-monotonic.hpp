@@ -5,6 +5,7 @@
  *
  * 单调栈：求每个位置左边（或右边）第一个更小/更大的位置。
  * 单调队列：定长滑动窗口的最值。
+ * @pitfall window_min 的 k 必须为正，k 大于数组长度时返回空数组。
  * 例：
  *   vector<int> L = previous_less(a);   // 左边第一个 < a[i] 的下标，没有为 -1
  *   vector<int> R = next_greater(a);    // 右边第一个 > a[i] 的下标
@@ -45,6 +46,7 @@ inline vector<int> next_greater(const vector<ll> &a) {
 
 // 每个长度 k 的窗口的最小值，返回 n-k+1 个
 inline vector<ll> window_min(const vector<ll> &a, int k) {
+    assert(k > 0);
     deque<int> q;
     vector<ll> res;
     for (int i = 0; i < (int)a.size(); i++) {

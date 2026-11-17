@@ -5,6 +5,7 @@
  * @idea 每个样本乘上在它处为 1、其他样本处为 0 的基多项式。横坐标连续时，分子用前后缀积，分母用阶乘。
  * @usage lagrange_eval(xs,ys,x,mod) 求任意样本的点值，lagrange_consecutive(ys,x,mod) 的横坐标固定为 0 到 n-1。
  * @pitfall mod 为 int 范围的素数，横坐标模 mod 后互异，所有输入先归约。
+ *          xs 和 ys 等长；连续点的样本数不能超过 mod。
  */
 #pragma once
 #include <bits/stdc++.h>

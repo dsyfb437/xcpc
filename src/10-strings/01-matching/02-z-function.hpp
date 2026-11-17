@@ -5,6 +5,7 @@
  *
  * z[i] = lcp(s, s[i..])，这里约定 z[0] = n。
  * 找 pattern 在 text 中的出现：拼 pattern + '#' + text 跑一遍即可。
+ * @pitfall 分隔符要在两个串中都没出现过；一般字节串需另选分隔符。
  *
  * 例：
  *   vector<int> z = z_function(s); */
@@ -13,7 +14,7 @@
 using namespace std;
 using ll = long long;
 
-vector<int> z_function(const string &s) {
+inline vector<int> z_function(const string &s) {
     int n = s.size();
     vector<int> z(n, 0);
     if (n == 0)

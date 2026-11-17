@@ -24,6 +24,20 @@ class PQTree {
     Ptr root;
     int n;
 
+    // 深链不能靠 shared_ptr 的递归析构释放。
+    static void release(Ptr old) {
+        vector<Ptr> pending;
+        if (old)
+            pending.push_back(move(old));
+        while (!pending.empty()) {
+            auto u = move(pending.back());
+            pending.pop_back();
+            if (u.use_count() == 1)
+                pending.insert(pending.end(), u->children.begin(),
+                               u->children.end());
+        }
+    }
+
     static Ptr make(Kind kind, vector<Ptr> children) {
         if (children.empty())
             return {};
@@ -41,15 +55,19 @@ class PQTree {
         unordered_map<const Node *, int> chosen;
 
         int count(const Ptr &u, const vector<bool> &marked) {
-            int answer = 0;
-            if (u->kind == leaf) {
-                answer = marked[u->id];
-            } else {
-                for (const auto &v : u->children)
-                    answer += count(v, marked);
+            vector<Ptr> order{u};
+            for (size_t i = 0; i < order.size(); i++) {
+                auto v = order[i];
+                order.insert(order.end(), v->children.begin(), v->children.end());
             }
-            chosen.emplace(u.get(), answer);
-            return answer;
+            for (auto it = order.rbegin(); it != order.rend(); ++it) {
+                const auto &v = *it;
+                int answer = v->kind == leaf ? marked[v->id] : 0;
+                for (const auto &child : v->children)
+                    answer += chosen.at(child.get());
+                chosen.emplace(v.get(), answer);
+            }
+            return chosen.at(u.get());
         }
 
         State state(const Ptr &u) const {
@@ -60,76 +78,65 @@ class PQTree {
         }
 
         // 返回从空侧到满侧的有序条带，供父节点拼接。
-        optional<Strip> boundary(const Ptr &u) const {
-            Strip result;
-            if (u->kind == p_node) {
-                vector<Ptr> before, after;
+        optional<Strip> boundary(Ptr u) const {
+            Strip result, suffix;
+            while (u) {
+                Strip before, after;
                 Ptr partial;
-                for (const auto &v : u->children) {
-                    State s = state(v);
-                    if (s == empty)
-                        before.push_back(v);
-                    else if (s == full)
-                        after.push_back(v);
-                    else if (partial)
-                        return nullopt;
-                    else
-                        partial = v;
-                }
-                if (auto group = make(p_node, move(before)))
-                    result.push_back(group);
-                if (partial) {
-                    auto side = boundary(partial);
-                    if (!side)
-                        return nullopt;
-                    result.splice(result.end(), *side);
-                }
-                if (auto group = make(p_node, move(after)))
-                    result.push_back(group);
-                return result;
-            }
-
-            auto order = u->children;
-            auto fits = [&] {
-                State last = empty;
-                for (const auto &v : order) {
-                    State s = state(v);
-                    if (s < last || (s == mixed && last == mixed))
-                        return false;
-                    last = s;
-                }
-                return true;
-            };
-            if (!fits()) {
-                reverse(order.begin(), order.end());
-                if (!fits())
-                    return nullopt;
-            }
-            for (const auto &v : order) {
-                if (state(v) != mixed) {
-                    result.push_back(v);
+                if (u->kind == p_node) {
+                    vector<Ptr> unselected, selected;
+                    for (const auto &v : u->children) {
+                        State s = state(v);
+                        if (s == empty)
+                            unselected.push_back(v);
+                        else if (s == full)
+                            selected.push_back(v);
+                        else if (partial)
+                            return nullopt;
+                        else
+                            partial = v;
+                    }
+                    if (auto group = make(p_node, move(unselected)))
+                        before.push_back(group);
+                    if (auto group = make(p_node, move(selected)))
+                        after.push_back(group);
                 } else {
-                    auto side = boundary(v);
-                    if (!side)
-                        return nullopt;
-                    result.splice(result.end(), *side);
+                    auto order = u->children;
+                    auto fits = [&] {
+                        State last = empty;
+                        for (const auto &v : order) {
+                            State s = state(v);
+                            if (s < last || (s == mixed && last == mixed))
+                                return false;
+                            last = s;
+                        }
+                        return true;
+                    };
+                    if (!fits()) {
+                        reverse(order.begin(), order.end());
+                        if (!fits())
+                            return nullopt;
+                    }
+                    for (const auto &v : order) {
+                        if (state(v) == mixed)
+                            partial = v;
+                        else
+                            (partial ? after : before).push_back(v);
+                    }
                 }
+                result.splice(result.end(), before);
+                suffix.splice(suffix.begin(), after);
+                u = move(partial);
             }
+            result.splice(result.end(), suffix);
             return result;
         }
 
-        Ptr reduce(const Ptr &u) const {
+        Ptr reduce_here(const Ptr &u) const {
             int total = chosen.at(u.get());
             if (total == 0 || total == u->size)
                 return u;
             auto children = u->children;
-            for (auto &v : children)
-                if (chosen.at(v.get()) == total) {
-                    // 所有选中叶子都在同一儿子里，只缩那一棵子树。
-                    v = reduce(v);
-                    return v ? make(u->kind, move(children)) : Ptr{};
-                }
-
             if (u->kind == p_node) {
                 vector<Ptr> outside, inside, partial;
                 for (const auto &v : children) {
@@ -187,6 +194,34 @@ class PQTree {
             }
             return make(q_node, {order.begin(), order.end()});
         }
+
+        Ptr reduce(Ptr u) const {
+            vector<pair<Ptr, int>> path;
+            while (true) {
+                int total = chosen.at(u.get()), next = -1;
+                if (!total || total == u->size)
+                    break;
+                for (int i = 0; i < (int)u->children.size(); i++)
+                    if (chosen.at(u->children[i].get()) == total) {
+                        next = i;
+                        break;
+                    }
+                if (next == -1)
+                    break;
+                path.emplace_back(u, next);
+                u = u->children[next];
+            }
+            auto answer = reduce_here(u);
+            if (!answer)
+                return {};
+            for (auto it = path.rbegin(); it != path.rend(); ++it) {
+                auto [parent, child] = *it;
+                auto children = parent->children;
+                children[child] = move(answer);
+                answer = make(parent->kind, move(children));
+            }
+            return answer;
+        }
     };
 
   public:
@@ -196,6 +231,15 @@ class PQTree {
             elements.push_back(make_shared<Node>(Node{leaf, i, 1, {}}));
         root = make(p_node, move(elements));
     }
+
+    PQTree(const PQTree &) = default;
+    PQTree(PQTree &&) noexcept = default;
+    PQTree &operator=(PQTree other) {
+        swap(root, other.root);
+        swap(n, other.n);
+        return *this;
+    }
+    ~PQTree() { release(move(root)); }
 
     bool constrain(const vector<int> &group) {
         if (!root)
@@ -210,23 +254,26 @@ class PQTree {
         auto next = work.reduce(root);
         if (!next)
             return false;
-        root = move(next);
+        root.swap(next);
+        release(move(next));
         return true;
     }
 
     vector<int> frontier() const {
         vector<int> result;
-        auto dfs = [&](auto &&self, const Ptr &u) -> void {
-            if (!u)
-                return;
+        vector<Ptr> pending;
+        if (root)
+            pending.push_back(root);
+        while (!pending.empty()) {
+            auto u = move(pending.back());
+            pending.pop_back();
             if (u->kind == leaf) {
                 result.push_back(u->id);
             } else {
-                for (const auto &v : u->children)
-                    self(self, v);
+                pending.insert(pending.end(), u->children.rbegin(),
+                               u->children.rend());
             }
-        };
-        dfs(dfs, root);
+        }
         return result;
     }
 };

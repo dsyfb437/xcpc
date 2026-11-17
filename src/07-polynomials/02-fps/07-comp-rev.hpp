@@ -5,6 +5,7 @@
  * @idea 按约 sqrt(n) 项分块，预处理 g 的小幂，再把 g^块长当成外层变量做 Horner。复合逆用牛顿法解 f(g)=x。
  * @usage fps_compose(f,g,n) 求 f(g(x))。fps_revert(f,n) 求复合逆。
  * @pitfall 模 998244353，系数先归约到 [0,998244353)。内层 g[0]=0，求逆时 f[0]=0 且 f[1] 非零。块内直接做线性组合，适合中等规模。
+ *          NTT 长度至多 2^23。
  */
 #pragma once
 #include <bits/stdc++.h>

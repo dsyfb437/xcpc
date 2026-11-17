@@ -4,7 +4,7 @@
  * @index 人和任务 0-based
  * @idea mask 记已选任务。已选数就是下一位人的编号，枚举没选过的任务转移。
  * @usage assignment_dp(cost) 返回每人分配一个不同任务的最小总费用。
- * @pitfall cost 是 int 方阵，允许负费用。建议 n <= 22，大图用匈牙利算法。
+ * @pitfall cost 是 int 方阵，允许负费用。n 必须小于 31，实际建议 n <= 22。
  */
 #pragma once
 #include <bits/stdc++.h>

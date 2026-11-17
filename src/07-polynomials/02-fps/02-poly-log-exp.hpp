@@ -4,7 +4,8 @@
  * @index 系数低次在前，保留前 n 项
  * @idea ln 用积分 f' / f。exp 从 1 开始，每轮用 g*(1 + f - ln(g)) 修正。
  * @usage fps_log(f,n) 和 fps_exp(f,n) 分别求对数和指数。
- * @pitfall 模 998244353。ln 的常数项须为 1，exp 的常数项须为 0。NTT 长度至多 2^23。
+ * @pitfall 模 998244353，系数先归约到 [0,998244353)，缺项按零补。
+ *          ln 的常数项须为 1，exp 的常数项须为 0。NTT 长度至多 2^23。
  */
 #pragma once
 #include <bits/stdc++.h>

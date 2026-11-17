@@ -14,7 +14,7 @@
 using namespace std;
 using ll = long long;
 
-pair<vector<int>, vector<int>> manacher(const string &s) {
+inline pair<vector<int>, vector<int>> manacher(const string &s) {
     int n = s.size();
     vector<int> d1(n), d2(n);
     for (int i = 0, l = 0, r = -1; i < n; i++) {

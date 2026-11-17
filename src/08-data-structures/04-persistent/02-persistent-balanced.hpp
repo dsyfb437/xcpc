@@ -5,6 +5,7 @@
  * @idea 分裂、合并和删除时复制访问到的节点，其余子树共享。子树大小用于排名和第 k 小。
  * @usage PersistentTreap t; int v=t.insert(old,x); v=t.erase(v,x); t.count_less(v,x); t.kth(v,k)。
  * @pitfall 重复键逐个计数，erase 只删一个，找不到则保留原版本。所有根都在同一个实例内使用。
+ *          kth 的 k 必须在 1 到该版本大小之间。
  */
 #pragma once
 #include <bits/stdc++.h>
