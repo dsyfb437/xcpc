@@ -51,3 +51,5 @@ Typst 使用 codly 1.3.0 包；首次构建需要联网下载包。
 GitHub 使用仅本仓库可写的 deploy key，保存在 clouddev 的 .ssh 下；不写入项目备份。重建服务器后须重新生成、登记 key，或通过 GitHub 设备登录；不要依赖旧电脑的凭证。
 
 本轮只提交 `.cloud-workbench` 中的运维配置；原有 24 个算法源码修改保留为未提交状态，完整副本进入项目备份。
+
+恢复脚本默认重建 PDF；需要编译检查全部 293 个模板时，在 restore.sh 前设置 `CLOUD_FULL_CHECK=1`。全量检查在 2 核机器上可能耗时较长。

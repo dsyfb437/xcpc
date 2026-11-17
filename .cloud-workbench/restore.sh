@@ -7,5 +7,5 @@ mkdir -p "$dest"
 if [ -n "$(ls -A "$dest")" ]; then echo 'Restore destination must be empty' >&2; exit 1; fi
 tar -xzf "$archive" -C "$dest"
 cd "$dest/xcpc-template"
-python3 print.py --check
+if [ "${CLOUD_FULL_CHECK:-0}" = "1" ]; then python3 print.py --check; fi
 python3 print.py
