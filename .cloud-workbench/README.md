@@ -53,3 +53,17 @@ GitHub 使用仅本仓库可写的 deploy key，保存在 clouddev 的 .ssh 下�
 本轮只提交 `.cloud-workbench` 中的运维配置；原有 24 个算法源码修改保留为未提交状态，完整副本进入项目备份。
 
 恢复脚本默认重建 PDF；需要编译检查全部 293 个模板时，在 restore.sh 前设置 `CLOUD_FULL_CHECK=1`。全量检查在 2 核机器上可能耗时较长。
+
+## 与 CPA 共用主机时的限制
+
+部署账户 clouddev 不具有 sudo；管理员按实际 UID 持久设置资源上限：
+
+```bash
+sudo loginctl enable-linger clouddev
+sudo systemctl set-property "user-$(id -u clouddev).slice" \
+  CPUQuota=100% MemoryHigh=700M MemoryMax=900M MemorySwapMax=512M TasksMax=256
+```
+
+这为工作台提供最多 1 核 CPU 与 900 MiB 内存，CPA 独立的 512 MiB 上限和固定出口规则保持不变。它们仍共享磁盘、网络和内核；大型构建不宜放在这台 2 GB 主机。资源超限可能终止工作台进程，需重新进入并恢复会话。
+
+`configure-services.sh` 可在 clouddev 下恢复用户服务和命令链接。始终通过 systemd 管理 Codex 后台服务，避免从其他管理员账户手动拉起同一后台服务，使其脱离 clouddev 的资源切片。
