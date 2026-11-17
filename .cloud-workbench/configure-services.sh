@@ -7,5 +7,6 @@ cp "$base"/systemd/* "$HOME/.config/systemd/user/"
 ln -sfn "$base/backup.sh" "$HOME/bin/workbench-backup"
 ln -sfn "$base/enter.sh" "$HOME/bin/workbench"
 ln -sfn "$base/ai.sh" "$HOME/bin/ai"
+ln -sfn "$base/ai-session.sh" "$HOME/bin/ai-session"
 systemctl --user daemon-reload
 systemctl --user enable --now codex-cloud-remote.service workbench-backup.timer

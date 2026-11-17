@@ -67,3 +67,8 @@ sudo systemctl set-property "user-$(id -u clouddev).slice" \
 这为工作台提供最多 1 核 CPU 与 900 MiB 内存，CPA 独立的 512 MiB 上限和固定出口规则保持不变。它们仍共享磁盘、网络和内核；大型构建不宜放在这台 2 GB 主机。资源超限可能终止工作台进程，需重新进入并恢复会话。
 
 `configure-services.sh` 可在 clouddev 下恢复用户服务和命令链接。始终通过 systemd 管理 Codex 后台服务，避免从其他管理员账户手动拉起同一后台服务，使其脱离 clouddev 的资源切片。
+
+## 手机与电脑继续同一条 AI 会话
+
+两端都可通过 `ssh -t cloud-workbench ~/bin/ai-session` 进入命名为 cloud-ai 的同一个 tmux 会话。手机 Termux 配置完成后，只需输入 `ai`。
+断开 SSH 不会终止该会话；退出 Codex 或服务器重启后，可运行 `~/bin/ai resume --last` 恢复历史，已经运行的普通进程不会跨服务器重启继续执行。
