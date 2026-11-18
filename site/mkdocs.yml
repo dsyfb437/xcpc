@@ -1,5 +1,5 @@
 site_name: xcpc
-site_description: 一个可同时生成网页和 A4 文档的 Markdown 模板
+site_description: XCPC 模板册网页版
 site_author: dsyfb437
 site_url: https://azusaaa.com/xcpc/
 copyright: Copyright &copy; 2026 dsyfb437
@@ -49,6 +49,7 @@ plugins:
 
 markdown_extensions:
   - pymdownx.snippets:
+      base_path: [".."]
       check_paths: true
   - admonition
   - attr_list

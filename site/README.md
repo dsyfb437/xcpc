@@ -1,13 +1,9 @@
-# xcpc
+# 网页版
 
-[在线阅读](https://azusaaa.com/xcpc/) · [打印版 PDF](https://github.com/dsyfb437/xcpc/releases/latest/download/xcpc.pdf)
+模板册的网页版，发布在 <https://azusaaa.com/xcpc/>。章节 Markdown 通过 snippets 直接引用仓库根目录 `src/` 下的模板原件，不另存副本。
 
-算法原件放在 `docs/code/`，章节 Markdown 引用原件。来源版本与收录范围见首页。
-在 `docs/` 写 Markdown，在 `mkdocs.yml` 登记文章顺序。网站和书共用这份目录。示例使用平铺导航；上游转换器对部分嵌套导航会卡住。
+- 本地预览：在 `site/` 下运行 `uv run --locked mkdocs serve`。
+- 发布：`site/` 或 `src/` 有改动并推送到 main 后，`.github/workflows/site.yml` 自动更新 Pages。
+- 新增章节：在 `docs/` 写 Markdown，并在 `mkdocs.yml` 的 `nav` 登记。
 
-- 本地预览：`uv run --locked mkdocs serve`。
-- 网站发布：推送到 main，GitHub Actions 自动更新 Pages。
-- 打印版发布：给要发布的提交打版本标签并推送，例如 `git tag v0.2.0 && git push origin v0.2.0`。成功后 PDF 出现在对应 Release。
-- 本地生成 PDF：安装 Git、Node 20、Typst 0.15.1、Noto CJK 和 DejaVu 字体，在 Linux 运行 `bash scripts/print.sh`。首次构建需要联网。输出为 `dist/xcpc.pdf`。
-
-网页使用 Material for MkDocs，公式使用 MathJax（Apache-2.0）。`print/` 的排版文件改自 [OI-Wiki-export](https://github.com/OI-wiki/OI-Wiki-export/tree/960f4345100a1b8caaea8fb13f5b813ec46985d0)，许可见该目录。打印脚本在临时目录使用固定版本的上游转换器，不改写原稿。
+只收录标记为 `@verified` 的模板。打印版 PDF 由仓库根目录的 `print.py` 生成，不在这里。

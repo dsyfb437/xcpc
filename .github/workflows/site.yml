@@ -1,7 +1,8 @@
-name: Pages
+name: 网页版
 on:
   push:
     branches: [main]
+    paths: ['site/**', 'src/**', '.github/workflows/site.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -16,6 +17,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
+    defaults:
+      run:
+        working-directory: site
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -23,6 +27,6 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: site/site
       - id: deploy
         uses: actions/deploy-pages@v4
