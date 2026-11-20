@@ -2,9 +2,9 @@
  * @brief 记忆化搜索（网格最长递增路）
  * @complexity O(RC)
  * @index 网格 0-based
- * @idea 把格子当状态，只走到四邻中更大的格子，所以没有环。第一次递归时算好答案，之后直接查表。
+ * @idea 只走向更大的四邻格，用显式栈模拟记忆化搜索。每格的答案只算一次，之后直接查表。
  * @usage longest_increasing_grid_path(a) 返回最长路径的点数。
- * @pitfall 网格为矩形，空网格返回 0。递增链很长时注意递归栈。
+ * @pitfall 网格为矩形，空网格返回 0。
  */
 #pragma once
 #include <bits/stdc++.h>
@@ -17,21 +17,40 @@ inline int longest_increasing_grid_path(const vector<vector<int>> &a) {
     int rows = (int)a.size(), cols = (int)a[0].size();
     vector memo(rows, vector<int>(cols));
     constexpr int dx[] = {1, -1, 0, 0}, dy[] = {0, 0, 1, -1};
-    auto dfs = [&](auto &&self, int x, int y) -> int {
-        int &best = memo[x][y];
-        if (best)
-            return best;
-        best = 1;
-        for (int d = 0; d < 4; d++) {
-            int u = x + dx[d], v = y + dy[d];
-            if (0 <= u && u < rows && 0 <= v && v < cols && a[u][v] > a[x][y])
-                best = max(best, 1 + self(self, u, v));
-        }
-        return best;
+    struct Frame {
+        int x, y, next = 0;
     };
+    vector<Frame> stack;
     int answer = 0;
     for (int x = 0; x < rows; x++)
-        for (int y = 0; y < cols; y++)
-            answer = max(answer, dfs(dfs, x, y));
+        for (int y = 0; y < cols; y++) {
+            if (!memo[x][y]) {
+                memo[x][y] = 1;
+                stack.push_back({x, y});
+            }
+            while (!stack.empty()) {
+                auto &cur = stack.back();
+                if (cur.next == 4) {
+                    int best = memo[cur.x][cur.y];
+                    stack.pop_back();
+                    if (!stack.empty()) {
+                        auto p = stack.back();
+                        memo[p.x][p.y] = max(memo[p.x][p.y], best + 1);
+                    }
+                    continue;
+                }
+                int d = cur.next++, u = cur.x + dx[d], v = cur.y + dy[d];
+                if (u < 0 || u >= rows || v < 0 || v >= cols ||
+                    a[u][v] <= a[cur.x][cur.y])
+                    continue;
+                if (memo[u][v]) {
+                    memo[cur.x][cur.y] = max(memo[cur.x][cur.y], memo[u][v] + 1);
+                } else {
+                    memo[u][v] = 1;
+                    stack.push_back({u, v});
+                }
+            }
+            answer = max(answer, memo[x][y]);
+        }
     return answer;
 }

@@ -4,7 +4,8 @@
  * @index x 为 0-based，矩形半开
  * @idea 外层按 x 更新树状数组，每个外层节点把可能出现的 y 离散化，维护一棵内层树状数组。
  * @usage Fenwick2D t(nx,points); t.add(x,y,delta); t.sum(x1,y1,x2,y2) 查矩形和。
- * @pitfall 建树时列出所有会修改的坐标，初值为零。x 端点在 [0,nx]，y 可为任意 int。
+ * @pitfall 建树时列出所有会修改的坐标，初值为零。修改点的 x 在 [0,nx)，查询端点在 [0,nx]。
+ *          y 可为任意 int；维护的块和、前缀和及计算中间值须放进 long long。
  */
 #pragma once
 #include <bits/stdc++.h>

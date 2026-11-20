@@ -2,6 +2,7 @@
  * @brief KMP
  * @complexity O(n + m)
  * @index 字符串下标 0-based
+ * @pitfall 按字节比较；kmp_match 遇到空模式时返回空数组。
  *
  * pi[i] 是 s[0..i] 最长的相等真前后缀长度，pi[0] = 0。
  * match 返回 pattern 在 text 中所有出现的起始下标。
@@ -14,7 +15,7 @@
 using namespace std;
 using ll = long long;
 
-vector<int> prefix_function(const string &s) {
+inline vector<int> prefix_function(const string &s) {
     int n = s.size();
     vector<int> pi(n, 0);
     for (int i = 1; i < n; i++) {
@@ -28,7 +29,7 @@ vector<int> prefix_function(const string &s) {
     return pi;
 }
 
-vector<int> kmp_match(const string &text, const string &pattern) {
+inline vector<int> kmp_match(const string &text, const string &pattern) {
     int n = text.size(), m = pattern.size();
     vector<int> res;
     if (m == 0)

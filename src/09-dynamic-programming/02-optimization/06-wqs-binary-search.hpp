@@ -5,6 +5,7 @@
  * @idea 给每个被选对象扣同样的罚值。罚值越大，最优选取数越少。二分跨过 k 的临界点，再补回 k 份罚值。
  * @usage wqs_max_exact(k,low,high,solve)；solve(p) 返回 {扣罚后的最优值,选取数}，同值选数较多。
  * @pitfall 恰选数的最优值序列须离散凹、有限可行域连续。low 的选数 >= k，high 的选数 <= k，否则返回 nullopt。
+ *          solve 的值用整数；计算罚项时可能需要 __int128。
  */
 #pragma once
 #include <bits/stdc++.h>

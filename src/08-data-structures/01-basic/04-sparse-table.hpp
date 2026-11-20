@@ -3,8 +3,10 @@
  * @complexity 预处理 O(n log n)，查询 O(1)
  * @index 数组 0-based，区间 [l, r)
  *
- * 默认求最小值；要最大值就传 greater<ll>。区间是 [l, r)。
- * 只支持可重复贡献的运算（min/max/gcd），不支持下标的加法。
+ * @idea 预处理长度为 2 的幂的区间最值，查询时用两段覆盖区间。
+ * @usage SparseTable<ll> st(a); st.query(l,r) 求最小值。
+ *        求最大值用 SparseTable<ll,greater<ll>>。
+ * @pitfall 查询区间必须非空。Cmp 是比较器；查 gcd 需要把 better 改成 gcd。
  *
  * 例：
  *   SparseTable<ll> st(a);   // a 是 0-indexed 数组

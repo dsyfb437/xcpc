@@ -4,6 +4,7 @@
  * @index 下标 1-based
  *
  * 单点加、子矩阵和（用前缀和容斥）。下标从 1 开始。
+ * 空前缀的和是 0；维护的块和、前缀和及计算中间值须放进 long long。
  * 例：
  *   Fenwick2D bit(n, m);
  *   bit.add(x, y, v);
